@@ -34,11 +34,4 @@ const podcastSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-podcastSchema.pre("save", function (next) {
-  if (this.title) {
-    this.slug = slugify(this.title, { lower: true, strict: true, trim: true });
-  }
-  next();
-});
-
 module.exports = mongoose.model("Podcast", podcastSchema);

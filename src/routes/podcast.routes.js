@@ -4,8 +4,8 @@ const podcastController = require("../controllers/podcast.controller");
 
 router.get("/", podcastController.getPodcast);
 router.post("/", podcastController.createPodcast);
-router.get("/:id", podcastController.getPodcastById);
-router.put("/:id", podcastController.updatePodcast);
-router.delete("/:id", podcastController.deletePodcast);
+router.get("/:slug", podcastController.getPodcastById);
+router.put("/:slug", podcastController.updatePodcast);
+router.delete("/:slug", podcastController.deletePodcast);
 
 module.exports = router;

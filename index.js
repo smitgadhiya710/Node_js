@@ -10,13 +10,7 @@ const episodeRoutes = require("./src/routes/episode.routes");
 
 dotenv.config();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors("*"));
 
 // Middleware
 app.use(express.json());

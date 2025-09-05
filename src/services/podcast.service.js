@@ -5,17 +5,17 @@ exports.createPodcast = async (data) => {
 };
 
 exports.getPodcast = async () => {
-  return await Podcast.find();
+  return await Podcast.find().sort({ createdAt: -1 });
 };
 
-exports.getPodcastById = async (id) => {
-  return await Podcast.findById(id);
+exports.getPodcastById = async (slug) => {
+  return await Podcast.findOne(slug);
 };
 
-exports.updatePodcast = async (id, data) => {
-  return await Podcast.findByIdAndUpdate(id, data, { new: true });
+exports.updatePodcast = async (slug, data) => {
+  return await Podcast.updateOne(slug, data, { new: true });
 };
 
-exports.deletePodcast = async (id) => {
-  return await Podcast.findByIdAndDelete(id);
+exports.deletePodcast = async (slug) => {
+  return await Podcast.deleteOne(slug);
 };

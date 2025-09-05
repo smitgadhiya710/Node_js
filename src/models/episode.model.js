@@ -1,18 +1,19 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
-const roleModelSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  age: {
-    type: Number,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-});
+// const roleModelSchema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   age: {
+//     type: Number,
+//   },
+//   category: {
+//     type: String,
+//     required: true,
+//   },
+// });
 
 const episodeSchema = new mongoose.Schema(
   {
@@ -33,6 +34,11 @@ const episodeSchema = new mongoose.Schema(
     releaseDate: {
       type: Date,
       required: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      require: true,
     },
     // roleModels: {
     //   type: [roleModelSchema],

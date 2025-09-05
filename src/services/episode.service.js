@@ -11,26 +11,26 @@ exports.getEpisode = async (search) => {
         { title: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
         { duration: { $regex: search, $options: "i" } },
-        ...(isNumeric ? [{ episodeNum: Number(search) }] : []),
       ],
     };
+    if (isNumeric) filter.$or.push({ episodeNum: Number(search) });
   }
 
   return await Episode.find(filter).sort({ createdAt: -1 });
 };
 
-exports.getEpisodeById = async (id) => {
-  return await Episode.findById(id);
+exports.getEpisodeById = async (slug) => {
+  return await Episode.findOne(slug);
 };
 
 exports.createEpisode = async (data) => {
   return await Episode.create(data);
 };
 
-exports.updateEpisode = async (id, data) => {
-  return await Episode.findByIdAndUpdate(id, data, { new: true });
+exports.updateEpisode = async (slug, data) => {
+  return await Episode.updateOne(slug, data, { new: true });
 };
 
-exports.deleteEpisode = async (id) => {
-  return await Episode.findByIdAndDelete(id);
+exports.deleteEpisode = async (slug) => {
+  return await Episode.deleteOne(slug);
 };

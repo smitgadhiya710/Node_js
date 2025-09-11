@@ -1,8 +1,9 @@
 const { default: slugify } = require("slugify");
 const episodeService = require("../services/episode.service");
-const { successResponse } = require("../utils/response");
+const { successResponse, errorResponse } = require("../utils/response");
 const { z } = require("zod");
 const episodeModel = require("../models/episode.model");
+const { slug } = require("../helper/slug");
 
 const episodeZodValidation = z.object({
   title: z.string(),
@@ -16,18 +17,30 @@ exports.getEpisode = async (req, res, next) => {
   try {
     const { search } = req.query;
     const episode = await episodeService.getEpisode(search);
-    successResponse(res, episode, "Episodes fetched !!");
+    successResponse({
+      res,
+      data: episode,
+      message: "Episodes fetched !!",
+      status: 200,
+    });
   } catch (error) {
-    next(error);
+    // next(error);
+    errorResponse({ res, error, message: "Something went wrong", status: 500 });
   }
 };
 
 exports.getEpisodeById = async (req, res, next) => {
   try {
     const episode = await episodeService.getEpisodeById(req.params);
-    successResponse(res, episode);
+    successResponse({
+      res,
+      data: episode,
+      message: "Episode Fetched",
+      status: 200,
+    });
   } catch (error) {
-    next(error);
+    // next(error);
+    errorResponse({ res, error, message: "Something went wrong", status: 500 });
   }
 };
 
@@ -35,49 +48,57 @@ exports.createEpisode = async (req, res, next) => {
   try {
     const validate = episodeZodValidation.parse(req.body);
 
-    let slug = createSlug(validate.title);
+    const generatedSlug = await slug.createSlug(validate.title, episodeModel);
 
-    let count = await episodeModel
-      .find({
-        $or: [
-          {
-            slug: {
-              $regex: new RegExp(`^${slug}`),
-            },
-          },
-          {
-            slug: {
-              $regex: new RegExp(`^${slug}(?:-\d+)?$`),
-            },
-          },
-        ],
-      })
-      .countDocuments();
+    const podcast = await episodeService.createEpisode({
+      ...validate,
+      slug: generatedSlug,
+    });
 
-    if (count > 0) slug = `${slug}-${count}`;
-
-    const podcast = await episodeService.createEpisode({ ...validate, slug });
-
-    successResponse(res, podcast, "episode create successfully");
+    successResponse({
+      res,
+      data: podcast,
+      message: "episode create successfully",
+      status: 201,
+    });
   } catch (error) {
-    next(error);
+    // next(error);
+    errorResponse({ res, error, message: "Something went wrong", status: 500 });
   }
 };
 
 exports.updatedEpisode = async (req, res, next) => {
   try {
-    const episode = await episodeService.updateEpisode(req.params, req.body);
-    successResponse(res, episode, "Episode updated");
+    const validate = episodeZodValidation.parse(req.body);
+
+    const generatedSlug = await slug.createSlug(validate.title, episodeModel);
+
+    const episode = await episodeService.updateEpisode(req.params, {
+      ...req.body,
+      slug: generatedSlug,
+    });
+    successResponse({
+      res,
+      data: episode,
+      message: "Episode updated",
+      status: 201,
+    });
   } catch (error) {
-    next(error);
+    // next(error);
+    errorResponse({ res, error, message: "Something went wrong", status: 500 });
   }
 };
 
 exports.deletedEpisode = async (req, res, next) => {
   try {
     await episodeService.deleteEpisode(req.params);
-    successResponse(res, null, "Episode delete successfully");
+    successResponse({
+      res,
+      data: null,
+      message: "Episode delete successfully",
+    });
   } catch (error) {
-    next(error);
+    // next(error);
+    errorResponse({ res, error, message: "Something went wrong", status: 500 });
   }
 };

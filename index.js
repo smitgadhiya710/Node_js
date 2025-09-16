@@ -40,8 +40,8 @@ connectDB();
 
 // Routes
 
-app.use("/auth", authRoutes);
 app.use(rateLimiting); // middleware
+app.use("/auth", authRoutes);
 app.use("/api", authenticateToken); // middleware
 app.use("/api/users", userRoutes);
 app.use("/api/podcast", podcastRoutes);

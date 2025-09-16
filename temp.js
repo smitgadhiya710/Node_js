@@ -49,3 +49,10 @@ function findToken(cookie, findvalue) {
 }
 
 // console.log(findToken(cookie, "Cookie_2"));
+
+const date = new Date().toISOString().split("T")[1].split(".")[0];
+
+// const d = new Date();
+// let time = d.getTime();
+
+console.log(date);

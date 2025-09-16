@@ -14,9 +14,10 @@ async function getDataWithParams(req, model) {
   if (restPara) {
     Object.entries(restPara).map(([key, value]) => {
       value.split(",").forEach((val) => {
-        key.includes("and_")
-          ? andArray.push({ [key.replace("and_", "")]: val })
-          : orArray.push({ [key.replace("or_", "")]: val });
+        if (value !== "All")
+          return key.includes("and_")
+            ? andArray.push({ [key.replace("and_", "")]: val })
+            : orArray.push({ [key.replace("or_", "")]: val });
       });
     });
   }

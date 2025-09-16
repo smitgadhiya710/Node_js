@@ -110,7 +110,7 @@ exports.updatePodcast = async (req, res, next) => {
 
 exports.deletePodcast = async (req, res, next) => {
   try {
-    const podcast = await podcastService.deletePodcast(req.params);
+    await podcastService.deletePodcast(req.params);
 
     successResponse({
       res,

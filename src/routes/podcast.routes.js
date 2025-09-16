@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const podcastController = require("../controllers/podcast.controller");
-const { checkCaching, caching } = require("../middlewares/caching.middleware");
+const { caching } = require("../middlewares/caching.middleware");
 
 router.get("/", caching.getCaching("all"), podcastController.getPodcast);
 router.post("/", podcastController.createPodcast);

@@ -48,4 +48,4 @@ function findToken(cookie, findvalue) {
   return string[1];
 }
 
-console.log(findToken(cookie, "Cookie_2"));
+// console.log(findToken(cookie, "Cookie_2"));

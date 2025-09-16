@@ -4,6 +4,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 const { z } = require("zod");
 const episodeModel = require("../models/episode.model");
 const { slug } = require("../helper/slug");
+const { caching } = require("../middlewares/caching.middleware");
 
 const episodeZodValidation = z.object({
   title: z.string(),
@@ -16,7 +17,8 @@ const episodeZodValidation = z.object({
 exports.getEpisode = async (req, res, next) => {
   try {
     const { search } = req.query;
-    const episode = await episodeService.getEpisode(search);
+    const episode = await episodeService.getEpisode(search, req);
+    caching.setCaching(`allEpisode-${req.url}`, episode);
     successResponse({
       res,
       data: episode,
@@ -32,6 +34,7 @@ exports.getEpisode = async (req, res, next) => {
 exports.getEpisodeById = async (req, res, next) => {
   try {
     const episode = await episodeService.getEpisodeById(req.params);
+    caching.setCaching(`slugEpisode-/${req.params.slug}`, episode);
     successResponse({
       res,
       data: episode,

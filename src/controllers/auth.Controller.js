@@ -203,7 +203,7 @@ exports.logout = async (req, res, next) => {
         status: 500,
       });
 
-    const updateUser = await User.findByIdAndUpdate(decode.id, {
+    await User.findByIdAndUpdate(decode.id, {
       refreshToken: null,
     });
 

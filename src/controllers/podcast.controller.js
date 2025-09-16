@@ -3,6 +3,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 const { z } = require("zod");
 const podcastModel = require("../models/podcast.model");
 const { slug } = require("../helper/slug");
+const { caching } = require("../middlewares/caching.middleware");
 
 const podcastZodValidation = z.object({
   title: z.string(),
@@ -38,6 +39,8 @@ exports.createPodcast = async (req, res, next) => {
 exports.getPodcast = async (req, res, next) => {
   try {
     const podcast = await podcastService.getPodcast(req);
+    caching.setCaching(`all-${req.url}`, podcast);
+
     successResponse({
       res,
       data: podcast,
@@ -58,6 +61,8 @@ exports.getPodcast = async (req, res, next) => {
 exports.getPodcastById = async (req, res, next) => {
   try {
     const podcast = await podcastService.getPodcastById(req.params);
+
+    caching.setCaching(`slug-/${req.params.slug}`, podcast);
     successResponse({
       res,
       data: podcast,
@@ -85,6 +90,7 @@ exports.updatePodcast = async (req, res, next) => {
       ...req.body,
       slug: generatedSlug,
     });
+
     successResponse({
       res,
       data: podcast,
@@ -104,7 +110,8 @@ exports.updatePodcast = async (req, res, next) => {
 
 exports.deletePodcast = async (req, res, next) => {
   try {
-    await podcastService.deletePodcast(req.params);
+    const podcast = await podcastService.deletePodcast(req.params);
+
     successResponse({
       res,
       data: null,

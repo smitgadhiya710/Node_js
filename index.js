@@ -12,6 +12,7 @@ const { authenticateToken } = require("./src/middlewares/auth.middleware");
 const { rateLimiting } = require("./src/middlewares/rateLimiting.middleware");
 
 dotenv.config();
+const PORT = process.env.PORT || 5000;
 
 // app.use(cors());
 
@@ -49,5 +50,4 @@ app.use("/api/episode", episodeRoutes);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {});

@@ -44,7 +44,7 @@ exports.login = async (req, res, next) => {
     if (!findUser)
       return errorResponse({
         res,
-        error: "Invalide username and password",
+        error: "Invalide username",
         message: "User not found",
         status: 404,
       });
